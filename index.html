@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>FindHome AI</title>
+<style>
+:root{--bg:#f3f5fb;--cd:#fff;--tx:#12141c;--mu:#6b7280;--ac:#5b6cff;--bd:#e3e6ef;--ok:#16a34a;--wr:#d97706;--lo:#dc2626;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d0f17;--cd:#171a26;--tx:#eef0f7;--mu:#8b92a7;--bd:#262a3a}}
+:root[data-theme=dark]{--bg:#0d0f17;--cd:#171a26;--tx:#eef0f7;--mu:#8b92a7;--bd:#262a3a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:auto}
+#m{flex:1;overflow:auto;padding:16px 16px 24px;animation:in .25s}@keyframes in{from{opacity:0;transform:translateY(6px)}}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:0;cursor:pointer;background:none}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--cd);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}input[type=checkbox]{width:22px;height:22px}
+.p{background:var(--ac);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600}.g{padding:12px 18px;border-radius:12px;background:var(--bd)}
+.ic{width:44px;height:44px;border-radius:12px;background:var(--cd);border:1px solid var(--bd);font-size:18px;flex:none}
+.hd,.sb,.sec,.row,.r{display:flex;align-items:center;gap:10px}.hd{margin-bottom:12px}.hd select{font-weight:700;font-size:18px;border:0;background:none;padding:6px 0}
+.sb{margin-bottom:12px}.sb input{padding:16px;font-size:16px;border-radius:16px}
+.big{width:100%;margin:6px 0 18px;padding:18px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#5b6cff,#22b8e8);font-size:18px;font-weight:700;text-align:left;box-shadow:0 8px 24px #5b6cff44}.big small{display:block;font-weight:400;opacity:.85;font-size:13px}
+.sec{justify-content:space-between;font-weight:700;margin:6px 0 10px}.lk{color:var(--ac);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rc,.card{background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:14px;cursor:pointer;transition:transform .15s}.rc:active{transform:scale(.97)}
+.rc span{font-size:26px;display:block}.rc small,.mu{color:var(--mu)}.card{display:flex;gap:12px;margin-bottom:10px;align-items:center}.card img,.th{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:none;background:var(--bd);display:grid;place-items:center;font-size:24px}
+.card p{margin:2px 0}.bd{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--bd);white-space:nowrap}.bd.ok{color:var(--ok)}.bd.wr{color:var(--wr)}.bd.lo{color:var(--lo)}
+#nav{display:flex;border-top:1px solid var(--bd);background:var(--cd)}#nav button{flex:1;padding:10px 0;font-size:11px;color:var(--mu)}#nav button.on{color:var(--ac);font-weight:700}#nav i{display:block;font-style:normal;font-size:20px}
+.ob{text-align:center;padding-top:15vh}.ob .logo{font-size:56px}.ob input{margin:12px 0}
+.chips{display:flex;gap:8px;overflow:auto;margin-bottom:12px}.chips button{padding:6px 14px;border-radius:99px;background:var(--cd);border:1px solid var(--bd);white-space:nowrap}.chips .on{background:var(--ac);color:#fff}
+.row{justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bd)}.row input,.row select{width:auto}
+.ov{position:fixed;inset:0;background:#0008;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sh{background:var(--bg);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;max-height:90%;overflow:auto;animation:in .2s}.sh label{display:grid;gap:4px;color:var(--mu);font-size:13px}.r{justify-content:flex-end}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:99px;z-index:99;opacity:0;transition:.3s;pointer-events:none;max-width:90%}#toast.on{opacity:1}
+#live{position:fixed;inset:0;background:#000;z-index:20;color:#fff}#live video,#live canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#live .top{position:absolute;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;display:flex;align-items:center;gap:10px;background:linear-gradient(#000a,transparent)}
+#live .top b{flex:1}.pill{padding:4px 10px;border-radius:99px;background:#0008;font-size:12px}#fps{font-size:11px;opacity:.8}
+#live select{position:absolute;top:calc(env(safe-area-inset-top,0px) + 58px);left:12px;width:auto;background:#000a;color:#fff;border-color:#fff3;padding:8px 12px}
+#lmsg{position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);color:var(--tx)}#lmsg .card{margin:0;background:#171a26f0;color:#eef0f7;border-color:#fff2;flex-wrap:wrap}
+#live .bot{position:absolute;left:0;right:0;bottom:0;padding:12px 12px calc(env(safe-area-inset-bottom,0px) + 14px);display:flex;gap:8px;background:linear-gradient(transparent,#000b)}
+#live .bot button{flex:1;padding:14px 6px;border-radius:14px;background:#ffffff22;color:#fff;font-weight:600;backdrop-filter:blur(8px)}#live .bot .rec{background:#e11d48}
+.zb{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:grid;gap:8px;justify-items:center}.zb button{width:42px;height:42px;border-radius:50%;background:#ffffff22;color:#fff;backdrop-filter:blur(8px);font-size:18px}
+.kr{padding:10px 0;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center}.kr b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.kr input{width:20px;height:20px}
+#vd{transform-origin:center}</style></head><body><div id="app"><main id="m"></main>
+<nav id="nav"><button data-a="tab" data-t="home"><i>🏠</i>Головна</button><button data-a="live"><i>📷</i>AI-Live</button><button data-a="tab" data-t="items"><i>📦</i>Предмети</button><button data-a="tab" data-t="hist"><i>🕘</i>Історія</button><button data-a="tab" data-t="set"><i>⚙️</i>Налаштування</button></nav></div>
+<div id="live" hidden><video id="vd" playsinline muted autoplay></video><canvas id="cv"></canvas>
+<div class="top"><button data-a="lx" class="pill">← Назад</button><b>AI-Live</b><span id="fps"></span><span id="lst" class="pill">⏳</span></div>
+<select id="lroom"></select><div class="zb"><button data-a="cloud" id="cb">☁️</button><button data-a="torch">🔦</button><button data-a="zi">＋</button><span id="zl" class="pill">1×</span><button data-a="zo">－</button></div><div id="lmsg"></div>
+<div class="bot"><button data-a="mic">🎙 AI</button><button data-a="snap">📸 Зберегти</button><button data-a="scan" id="scb">⏺ Сканувати</button></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9),dpr=window.devicePixelRatio||1;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DS={live:1,auto:0,min:80,pct:1,names:1,frames:1,upd:1,debug:0,modelUrl:'',perf:'auto',cloudAuto:0};
+let S={homes:[],cur:null,set:{},dirty:0,keys:[],active:null,consent:0};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('findhome')||'{}'))}catch(e){}
+S.set=Object.assign({},DS,S.set);
+let st;const save=()=>{S.dirty++;clearTimeout(st);st=setTimeout(()=>{try{localStorage.setItem('findhome',JSON.stringify(S))}catch(e){toast('Сховище переповнене')}},150)};
+const H=()=>S.homes.find(h=>h.id==S.cur)||S.homes[0],R=id=>H().rooms.find(r=>r.id==id),rn=id=>R(id)?.name||'—';
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)};
+const ft=t=>{if(!t)return'—';const d=new Date(t),n=new Date(),dd=Math.round((new Date(n.toDateString())-new Date(d.toDateString()))/864e5);return(dd==0?'сьогодні':dd==1?'вчора':d.toLocaleDateString('uk'))+' о '+d.toLocaleTimeString('uk',{hour:'2-digit',minute:'2-digit'})};
+const pl=n=>n+(n%10==1&&n%100!=11?' предмет':[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?' предмети':' предметів');
+const ri=n=>{n=n.toLowerCase();return n.includes('спальн')?'🛏':n.includes('кухн')?'🍳':n.includes('віталь')?'🛋':n.includes('корид')?'🚪':n.includes('ван')?'🛁':n.includes('балкон')?'🌿':'🏠'};
+const lv=c=>c>=90?['Висока впевненість','ok']:c>=70?['Середня впевненість','wr']:['Низька впевненість','lo'];
+const shrink=(f,m=360)=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.6))};i.src=URL.createObjectURL(f)});
+function form(t,f,cb){const d=document.createElement('div');d.className='ov';
+d.innerHTML=`<form class=sh><h3 style="margin:0">${t}</h3>${f.map(x=>`<label>${x.l}${x.t=='area'?`<textarea name=${x.k} rows=3>${esc(x.v)}</textarea>`:x.t=='sel'?`<select name=${x.k}>${x.o.map(o=>`<option value="${o[0]}" ${o[0]==x.v?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`:x.t=='file'?`<input type=file name=${x.k} accept="image/*">`:`<input name=${x.k} value="${esc(x.v)}">`}</label>`).join('')}<div class=r><button type=button class=g>Скасувати</button><button class=p>Зберегти</button></div></form>`;
+document.body.appendChild(d);const fm=d.firstChild;d.onclick=e=>{if(e.target==d||e.target.classList.contains('g'))d.remove()};
+fm.onsubmit=async e=>{e.preventDefault();const v={};for(const x of f){const el=fm.elements[x.k];v[x.k]=x.t=='file'?(el.files[0]?await shrink(el.files[0]):null):el.value}d.remove();cb(v)}}
+/* ---------- пошук ---------- */
+const STOP=new Set('де мій моя моє мої мою покажи показати забув забула залишив залишила останнє останній місце коли востаннє бачили бачив яка який якій кімнаті знаходиться лежить цей ця це що'.split(' '));
+const tk=s=>s.toLowerCase().split(/[^а-яіїєґa-z0-9']+/).filter(w=>w.length>2);
+function itemAns(i){const l=i.lastSeen?lv(i.conf||0):null;return`<div class=card data-a=iopen data-id=${i.id}>${i.photo?`<img src="${i.photo}">`:'<div class=th>📦</div>'}<div><b>«${esc(i.name)}» — ${esc(rn(i.roomId))}</b>${i.desc?`<p>${esc(i.desc)}</p>`:''}<p class=mu>${i.lastSeen?`Зафіксовано ${ft(i.lastSeen)} · ${Math.round(i.conf||0)}% <span class="bd ${l[1]}">${l[0]}</span>`:'Додано вручну, AI ще не бачив цей предмет'}</p></div></div>`}
+function answer(q){const ws=tk(q).filter(w=>!STOP.has(w)).map(w=>w.slice(0,4));if(!ws.length)return'';
+const r=H().items.map(i=>{const a=tk(i.name).map(w=>w.slice(0,4)),b=tk(i.desc||'').map(w=>w.slice(0,4));return[i,ws.filter(w=>a.includes(w)).length*2+ws.filter(w=>b.includes(w)).length]}).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,3);
+return r.length?r.map(x=>itemAns(x[0])).join(''):`<div class=card style="cursor:default">Я поки не знаю, де знаходиться цей предмет. Спробуйте просканувати будинок через AI-Live.</div>`}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function voice(cb){if(!SR)return toast('Голосове введення не підтримується');const r=new SR();r.lang='uk-UA';r.onresult=e=>cb(e.results[0][0].transcript);r.onerror=()=>toast('Не вдалось розпізнати голос');r.start();toast('Слухаю…')}
+/* ---------- екрани ---------- */
+const V={tab:'home',room:null,item:null,q:'',ans:'',flt:''};
+const homeV=h=>`<div class=hd><select data-sw>${S.homes.map(x=>`<option value=${x.id} ${x.id==h.id?'selected':''}>${esc(x.name)}</option>`)}</select><button class=ic data-a=hnew2>＋</button></div>
+<form class=sb><input id=q placeholder="🔍 Що ви шукаєте?" value="${esc(V.q)}"><button type=button class=ic data-a=mics>🎙</button></form>${V.ans}
+<button class=big data-a=live>📷 AI-Live<small>Скануйте кімнату камерою</small></button>
+<div class=sec>Кімнати <button class=lk data-a=radd>＋ Додати</button></div><div class=grid>${h.rooms.map(r=>`<div class=rc data-a=ropen data-id=${r.id}><span>${ri(r.name)}</span><b>${esc(r.name)}</b><br><small>${pl(h.items.filter(i=>i.roomId==r.id).length)}</small></div>`).join('')||'<p class=mu>Додайте першу кімнату</p>'}</div>`;
+const rowI=i=>{const l=lv(i.conf||0);return`<div class=card data-a=iopen data-id=${i.id}>${i.photo?`<img src="${i.photo}">`:'<div class=th>📦</div>'}<div style="flex:1"><b>${esc(i.name)}</b><p class=mu>${esc(rn(i.roomId))} · ${ft(i.lastSeen||i.created)}</p></div>${i.lastSeen?`<span class="bd ${l[1]}">${Math.round(i.conf)}%</span>`:''}</div>`};
+const roomV=h=>{const r=R(V.room),its=h.items.filter(i=>i.roomId==r.id);return`<div class=hd><button class=ic data-a=back>←</button><h2 style="flex:1;margin:0">${ri(r.name)} ${esc(r.name)}</h2><button class=ic data-a=redit>✎</button><button class=ic data-a=rdel>🗑</button></div>${r.photo?`<img src="${r.photo}" style="width:100%;border-radius:16px;margin-bottom:10px">`:''}<p class=mu>${esc(r.description||'')}</p><div class=sec>${pl(its.length)}<button class=lk data-a=iadd>＋ Предмет</button></div>${its.map(rowI).join('')||'<p class=mu>Порожньо</p>'}`};
+const itemsV=h=>`<h2>Предмети</h2><div class=chips><button class="${V.flt?'':'on'}" data-a=flt data-id="">Усі</button>${h.rooms.map(r=>`<button class="${V.flt==r.id?'on':''}" data-a=flt data-id=${r.id}>${esc(r.name)}</button>`).join('')}</div>${h.items.filter(i=>!V.flt||i.roomId==V.flt).map(rowI).join('')||'<p class=mu>Предметів ще немає</p>'}<button class=p data-a=iadd style="width:100%">＋ Додати предмет</button>`;
+const histV=h=>{const o=h.items.flatMap(i=>i.history.map(x=>({...x,n:i.name,id:i.id}))).sort((a,b)=>b.ts-a.ts).slice(0,100);return`<h2>Історія спостережень</h2>${o.map(x=>`<div class=card data-a=iopen data-id=${x.id}>${x.image?`<img src="${x.image}">`:'<div class=th>👁</div>'}<div><b>${esc(x.n)}</b><p class=mu>${ft(x.ts)}<br>${esc(rn(x.roomId))} · ${Math.round(x.conf)}% · ${x.source}</p></div></div>`).join('')||'<p class=mu>Спостережень ще немає. Запустіть AI-Live.</p>'}`};
+const itemV=h=>{const i=h.items.find(x=>x.id==V.item);return`<div class=hd><button class=ic data-a=back>←</button><h2 style="flex:1;margin:0">${esc(i.name)}</h2><button class=ic data-a=iedit>✎</button><button class=ic data-a=idel>🗑</button></div>${i.photo?`<img src="${i.photo}" style="width:100%;border-radius:16px;margin-bottom:10px">`:''}<p><b>${esc(rn(i.roomId))}</b><br>${esc(i.desc||'')}</p><p class=mu>Створено ${ft(i.created)}${i.lastSeen?` · остання впевненість ${Math.round(i.conf)}%`:''}</p><div class=sec>Історія</div>${i.history.map(x=>`<div class=card style="cursor:default">${x.image?`<img src="${x.image}">`:'<div class=th>👁</div>'}<div><b>${ft(x.ts)}</b><p class=mu>${esc(rn(x.roomId))} · ${Math.round(x.conf)}% · ${lv(x.conf)[0]}</p></div></div>`).join('')||'<p class=mu>AI ще не бачив цей предмет</p>'}`};
+const tg=(k,l)=>`<label class=row>${l}<input type=checkbox data-s=${k} ${S.set[k]?'checked':''}></label>`;
+const setV=h=>`<h2>Налаштування</h2><div class=sec>AI-Live</div>${tg('live','AI-Live')}${tg('auto','Автоматично додавати предмети')}<label class=row>Мінімальна впевненість<select data-s=min>${[70,80,90,95].map(v=>`<option ${S.set.min==v?'selected':''}>${v}</option>`)}</select></label>${tg('pct','Показувати відсоток')}${tg('names','Показувати назви')}${tg('frames','Зберігати кадри')}${tg('upd','Автоматично оновлювати місцезнаходження')}${tg('debug','Debug (показувати &lt;50%)')}<label class=row>Продуктивність<select data-s=perf>${[['auto','Авто'],['fast','Макс. швидкість'],['acc','Макс. точність']].map(o=>`<option value=${o[0]} ${S.set.perf==o[0]?'selected':''}>${o[1]}</option>`)}</select></label>${tg('cloudAuto','Хмарний AI в AI-Live автоматично')}
+<div class=sec style="margin-top:16px">Ключі AI <button class=lk data-a=kadd>＋ Додати</button></div>${S.keys.map(k=>`<div class=kr><input type=radio name=ak ${S.active==k.id?'checked':''} data-a=kuse data-id=${k.id}><b>${k.prov=='gemini'?'Gemini':'ChatGPT'} · ${esc(k.name)} · …${esc(k.key.slice(-4))}</b><button class=ic data-a=kdel data-id=${k.id}>🗑</button></div>`).join('')||'<p class=mu>Ключів немає: працює лише локальна модель.</p>'}<p class=mu>Ключі лежать лише в цьому браузері й не потрапляють в експорт. Кадри йдуть провайдеру тільки в режимі ☁️ після вашого підтвердження. Якщо ключ не спрацює, застосунок сам перемкнеться на наступний, а потім на локальну модель.</p>
+<div class=sec style="margin-top:16px">Модель</div><input data-s=modelUrl placeholder="URL власної моделі COCO-SSD (необов'язково)" value="${esc(S.set.modelUrl)}">
+<div class=sec style="margin-top:16px">Конфіденційність</div><p class=mu>Відео обробляється локально на пристрої. Кадри нікуди не надсилаються. Дані зберігаються лише у вашому браузері.</p>
+<div class=sec>Дані</div><div class=r style="flex-wrap:wrap;justify-content:flex-start"><button class=g data-a=exp>Копіювати JSON</button><button class=g data-a=imp>Імпорт</button><button class=g data-a=sync>Синхронізація (${S.dirty})</button><button class=g data-a=hdel style="color:var(--lo)">Видалити дім</button></div>`;
+function render(){const h=H(),m=$('#m');$('#nav').hidden=!h;if(!h){m.innerHTML=`<div class=ob><div class=logo>🏠</div><h1>FindHome AI</h1><p class=mu>Створіть свій перший дім</p><input id=hn value="Мій дім"><button class=p data-a=hnew style="width:100%">Створити</button></div>`;return}
+document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==V.tab&&!V.room&&!V.item));
+m.innerHTML=V.item?itemV(h):V.room?roomV(h):({home:homeV,items:itemsV,hist:histV,set:setV}[V.tab])(h);m.style.animation='none';m.offsetHeight;m.style.animation=''}
+/* ---------- дані ---------- */
+function mkItem(o){const i={id:uid(),name:o.name,desc:o.desc||'',roomId:o.roomId,photo:o.photo||null,created:Date.now(),lastSeen:null,conf:0,pos:null,history:[]};H().items.push(i);return i}
+function addObs(i,conf,room,thumb,pos,src){const ts=Date.now();i.history.unshift({ts,roomId:room,conf,image:thumb,pos,source:src});i.history.length=Math.min(i.history.length,40);i.lastSeen=ts;i.conf=conf;i.pos=pos;if(S.set.upd||!i.roomId)i.roomId=room;if(thumb)i.photo=thumb;save()}
+const cl=(s,fn)=>document.addEventListener(s,fn);
+cl('submit',e=>{if(e.target.classList.contains('sb')){e.preventDefault();V.q=$('#q').value;V.ans=answer(V.q);render()}});
+cl('change',e=>{const t=e.target;if(t.hasAttribute('data-sw')){S.cur=t.value;save();render()}else if(t.dataset.s){const k=t.dataset.s;S.set[k]=t.type=='checkbox'?+t.checked:k=='min'?+t.value:t.value;save();if(k=='modelUrl'||k=='perf')M=null}});
+cl('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,id=b.dataset.id,h=H();
+const roomOpts=()=>h.rooms.map(r=>[r.id,r.name]);
+switch(a){
+case'hnew':{const n=$('#hn').value.trim()||'Мій дім',x={id:uid(),name:n,rooms:[],items:[]};S.homes.push(x);S.cur=x.id;save();render();break}
+case'hnew2':form('Новий дім',[{k:'n',l:'Назва',v:''}],v=>{if(!v.n.trim())return;const x={id:uid(),name:v.n.trim(),rooms:[],items:[]};S.homes.push(x);S.cur=x.id;save();render()});break;
+case'hdel':if(confirm('Видалити цей дім з усіма даними?')){S.homes=S.homes.filter(x=>x.id!=h.id);S.cur=S.homes[0]?.id;save();V.tab='home';render()}break;
+case'tab':V.tab=b.dataset.t;V.room=V.item=null;render();break;
+case'back':if(V.item)V.item=null;else V.room=null;render();break;
+case'flt':V.flt=id;render();break;
+case'radd':form('Нова кімната',[{k:'name',l:'Назва',v:''},{k:'description',l:'Опис',t:'area',v:''},{k:'photo',l:'Фото',t:'file'}],v=>{if(!v.name.trim())return;h.rooms.push({id:uid(),name:v.name.trim(),description:v.description,photo:v.photo});save();render()});break;
+case'ropen':V.room=id;render();break;
+case'redit':{const r=R(V.room);form('Кімната',[{k:'name',l:'Назва',v:r.name},{k:'description',l:'Опис',t:'area',v:r.description||''},{k:'photo',l:'Нове фото
